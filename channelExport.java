@@ -435,14 +435,27 @@ public class channelExport
           {
             for (int h=0; h<currentChannelXML.size(); h++)
             {
-             channelExportFinal.print(currentChannelXML.get(h)+"\n");
-             if(currentChannelXML.get(h).toString().contains("</metadata>") && includeCTLs == true)
-             {
-              for(int b=0;b<allCTLArray.size();b++)
-              {
-                channelExportFinal.print(allCTLArray.get(b));
-              }
-             }
+            	//section below was added in 2.2.1 to filter out certain characters
+          	    //characters found so far: '…'
+            	String[] badCharacters = {"…"};
+            	String[] goodReplacements = {"..."};
+            	for(int bad=0;bad<badCharacters.length;bad++)
+            	{
+            		if(currentChannelXML.get(h).toString().contains(badCharacters[bad]))
+                	{
+                		String replaceBadCharacter = currentChannelXML.get(h).toString().replace(badCharacters[bad], goodReplacements[bad]);
+                		currentChannelXML.set(h, replaceBadCharacter);
+                	}
+            	}
+            	
+	            channelExportFinal.print(currentChannelXML.get(h)+"\n");
+	            if(currentChannelXML.get(h).toString().contains("</metadata>") && includeCTLs == true)
+	            {
+	              for(int b=0;b<allCTLArray.size();b++)
+	              {
+	                channelExportFinal.print(allCTLArray.get(b));
+	              }
+	            }
             }
             channelExportFinal.close();
           }
