@@ -232,14 +232,7 @@ public class channelExport
          */
         boolean sftpCheck = true;
         for(int cm=0;cm<channelNames.size();cm++)
-        {        
-        	//new in 2.2.3 - Evaluating if an SFTP restart channel is needed
-        	if(cm == channelNames.size() -1 && sftpCheck == true)
-        	{                
-                sftpChannelBuilder(host);
-                sftpCheck = false;
-        	}
-        	
+        {      
         	File currentChannelFile = new File(backupFolderPath+"channelBackup\\" + channelNames.get(cm)+".xml");
             try 
     		{
@@ -372,11 +365,16 @@ public class channelExport
             
             //replaces the rawChannelCLOB with the new result
             rawChannelCLOB.set(cm, channelXMLOutput);
+            
+            //new in 2.2.3 - Evaluating if an SFTP restart channel is needed
+            //changed location in the loop to be at the bottom as it was skipping the last channel for the check
+        	if(cm == channelNames.size() -1 && sftpCheck == true)
+        	{                
+                sftpChannelBuilder(host);
+                sftpCheck = false;
+        	}
         }                       
         //END channelExport Appending        
-        
-//        //new in 2.2.3 - Evaluating if an SFTP restart channel is needed
-//        sftpChannelBuilder(host);
         
         return "metaDataExported";
     }
